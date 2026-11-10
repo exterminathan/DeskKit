@@ -1,0 +1,39 @@
+{
+  "$schema": "../../schemas/module.schema.json",
+  "schema_version": 1,
+  "id": "alwaysontop",
+  "name": "Always On Top",
+  "version": "0.0.1",
+  "description": "Pin any window above all others with a hotkey, with a coloured border on pinned windows.",
+  "source": "in-repo",
+  "repo": null,
+  "runtime": {
+    "type": "dotnet",
+    "min": "8.0",
+    "self_contained": true
+  },
+  "entry": "bin/AlwaysOnTop.exe",
+  "args": [],
+  "console": false,
+  "run_mode": "tray",
+  "instance": {
+    "single": true,
+    "mutex": "Local\\DeskKit.alwaysontop",
+    "show_event": "Local\\DeskKit.alwaysontop.show",
+    "stop_event": "Local\\DeskKit.alwaysontop.stop"
+  },
+  "actions": [],
+  "autostart": {
+    "default": false,
+    "managed_by": "shell"
+  },
+  "icon": null,
+  "data_dir": "%APPDATA%\\DeskKit\\alwaysontop",
+  "settings_path": null,
+  "settings_action": null,
+  "launcher": null,
+  "helpers": [],
+  "licence": "MIT",
+  "homepage": null,
+  "notes": "Scaffold only (G9, 2026-11-10): builds, starts, stops. No features. Listed in suite.json as status planned, so the installer and shell skip it. See docs/modules-plan.md."
+}

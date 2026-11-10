@@ -1,0 +1,78 @@
+{
+  "$schema": "schemas/suite.schema.json",
+  "schema_version": 1,
+  "name": "DeskKit",
+  "version": "0.1.0",
+  "publisher": "inNATE Tools",
+  "licence": "MIT",
+  "repo": "https://github.com/exterminathan/DeskKit",
+  "shell": { "version": "0.1.0", "path": "shell" },
+  "modules": [
+    {
+      "id": "regioncontrol",
+      "version": "0.1.1",
+      "source": "pinned",
+      "path": "modules/regioncontrol",
+      "repo": "https://github.com/exterminathan/region-control",
+      "tag": "v0.1.1",
+      "url": "https://github.com/exterminathan/region-control/releases/download/v0.1.1/RegionControl-Portable-0.1.1.exe",
+      "sha256": "b192a3c2e1f2b7a96f83dd522c482ae4a8911a8553e33ee36f07590fe220f6a2",
+      "asset_type": "exe",
+      "asset_pattern": "RegionControl-Portable-{version}.exe",
+      "note": "GitHub pre-release, unsigned. SHA256 is the asset digest GitHub reported on 2026-11-10 for v0.1.1."
+    },
+    {
+      "id": "taskbargroups",
+      "version": "0.1.1",
+      "source": "in-repo",
+      "path": "modules/taskbargroups",
+      "note": "Moved in-repo on 2026-11-10 (Nate): build with modules/taskbargroups/build.ps1 like the other compiled modules."
+    },
+    {
+      "id": "regionshot",
+      "version": "0.1.1",
+      "source": "in-repo",
+      "path": "modules/regionshot"
+    },
+    {
+      "id": "cablelisten",
+      "version": "0.1.0",
+      "source": "in-repo",
+      "path": "modules/cablelisten"
+    },
+    {
+      "id": "eyesaver",
+      "version": "0.1.0",
+      "source": "in-repo",
+      "path": "modules/eyesaver"
+    },
+    {
+      "id": "colorpicker",
+      "version": "0.0.1",
+      "source": "in-repo",
+      "path": "modules/colorpicker",
+      "status": "planned"
+    },
+    {
+      "id": "alwaysontop",
+      "version": "0.0.1",
+      "source": "in-repo",
+      "path": "modules/alwaysontop",
+      "status": "planned"
+    },
+    {
+      "id": "powerdisplay",
+      "version": "0.0.1",
+      "source": "in-repo",
+      "path": "modules/powerdisplay",
+      "status": "planned"
+    },
+    {
+      "id": "powerrename",
+      "version": "0.0.1",
+      "source": "in-repo",
+      "path": "modules/powerrename",
+      "status": "planned"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+# CI for DeskKit: validate the contract files, run the tests, and test the installer.
+# Not run yet: DeskKit has no remote (Nate decides when to publish).
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate suite.json and module.json files
+        run: python tools/validate-modules.py
+      - name: Contract and tool tests
+        run: python -m unittest discover -s tests
+
+  installer:
+    needs: validate
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+      - name: Build the installer and run the silent install test
+        shell: pwsh
+        run: ./packaging/test.ps1
+      - name: Keep the installer for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeskKit-Setup-ci
+          path: |
+            dist/DeskKit-Setup-*.exe
+            dist/SHA256SUMS.txt

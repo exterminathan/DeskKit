@@ -1,0 +1,25 @@
+## .NET / Visual Studio
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.csproj.user
+*.pdb
+
+## Rider
+.idea/
+
+## VS Code
+.vscode/
+
+## Build outputs
+*.exe.config
+publish/
+
+## Runtime data created next to the .exe (developer machines)
+TaskbarGroups/bin/
+TaskbarGroups/obj/
+
+## Logs
+*.log

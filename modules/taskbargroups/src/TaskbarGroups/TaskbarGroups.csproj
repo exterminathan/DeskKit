@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    DeskKit module "taskbargroups" (docs/module-contract.md).
+    The build writes only into this project's bin\ and obj\, or into the folder that
+    modules/taskbargroups/build.ps1 passes with -o (the module's bin\). It installs nothing,
+    kills no running copy and creates no Start Menu shortcut.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <AssemblyName>TaskbarGroups</AssemblyName>
+    <RootNamespace>TaskbarGroups</RootNamespace>
+    <Version>0.1.0</Version>
+    <Company>inNATE Tools</Company>
+    <Product>DeskKit Taskbar Groups</Product>
+    <Copyright>Copyright (c) 2026 inNATE Tools</Copyright>
+  </PropertyGroup>
+
+  <!-- Default group icons, written to <data dir>\icons on first run if missing. -->
+  <ItemGroup>
+    <EmbeddedResource Include="icons\*.ico" LogicalName="icons.%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

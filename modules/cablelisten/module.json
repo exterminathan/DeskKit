@@ -1,0 +1,51 @@
+{
+  "$schema": "../../schemas/module.schema.json",
+  "schema_version": 1,
+  "id": "cablelisten",
+  "name": "Cable Listen",
+  "version": "0.1.0",
+  "description": "Turn 'Listen to this device' on or off for a recording device and pick the output it plays through.",
+  "source": "in-repo",
+  "repo": null,
+  "runtime": { "type": "python", "min": "3.12", "requirements": null },
+  "entry": "src/cable_listen.pyw",
+  "args": [],
+  "console": false,
+  "run_mode": "window",
+  "instance": {
+    "single": true,
+    "mutex": "Local\\DeskKit.cablelisten",
+    "show_event": "Local\\DeskKit.cablelisten.show",
+    "stop_event": "Local\\DeskKit.cablelisten.stop"
+  },
+  "actions": [],
+  "autostart": { "default": false, "managed_by": "shell" },
+  "icon": null,
+  "data_dir": "%APPDATA%\\DeskKit\\cablelisten",
+  "settings_path": "{data_dir}\\settings.json",
+  "settings_action": null,
+  "launcher": "launch.cmd",
+  "helpers": [
+    {
+      "id": "soundvolumeview",
+      "name": "NirSoft SoundVolumeView",
+      "required": true,
+      "purpose": "Turns 'Listen to this device' on and off and lists audio devices",
+      "detect": {
+        "setting": "svv_path",
+        "paths": ["{helpers_dir}\\soundvolumeview\\SoundVolumeView.exe"],
+        "on_path": "SoundVolumeView.exe"
+      },
+      "download": {
+        "url": "https://www.nirsoft.net/utils/soundvolumeview-x64.zip",
+        "sha256": "ee2c45553fb9fb31b71db88b537c18e25c1a387a4a9009d081bdb38265c68e1f",
+        "archive": "zip",
+        "page": "https://www.nirsoft.net/utils/sound_volume_view.html"
+      },
+      "licence": "Freeware"
+    }
+  ],
+  "licence": "MIT",
+  "homepage": null,
+  "notes": "Settings file is settings.json (key source, svv_path). A legacy cable_listen.json is copied once from the data dir, the script dir or a PATH folder. The sha256 pins SoundVolumeView as served on 2026-11-10. VB-Audio Virtual Cable is only the default source device: a driver the user installs, not a helper."
+}

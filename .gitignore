@@ -1,0 +1,30 @@
+# Build output
+out/
+bin/
+obj/
+*.user
+.vs/
+
+# Module build output and pinned downloads (modules/<id>/bin/)
+modules/*/bin/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.log
+
+# Editors and OS
+.vscode/*
+!.vscode/settings.json
+Thumbs.db
+Desktop.ini
+
+# Local Claude settings
+.claude/settings.local.json
+
+dist/
+
+# Coordinator state (private tracker link)
+.claude/coordinator.json

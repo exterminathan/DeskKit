@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "name": "DeskKit",
+  "version": "0.1.0",
+  "publisher": "inNATE Tools",
+  "licence": "MIT",
+  "shell": { "version": "0.1.0", "path": "shell" },
+  "modules": [
+    { "id": "badmod", "version": "2.0.0", "source": "in-repo", "path": "modules/badmod" },
+    {
+      "id": "ghost",
+      "version": "0.1.0",
+      "source": "pinned",
+      "path": "modules/ghost",
+      "repo": "https://github.com/example/ghost",
+      "tag": "v0.1.0",
+      "url": "https://example.com/ghost.exe",
+      "sha256": null,
+      "asset_type": "exe"
+    }
+  ]
+}

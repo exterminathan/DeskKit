@@ -1,0 +1,29 @@
+{
+  "$schema": "../../schemas/module.schema.json",
+  "schema_version": 1,
+  "id": "template",
+  "name": "Hello",
+  "version": "0.1.0",
+  "description": "Template module in C# (.NET 8): prints a greeting from its settings file and exits.",
+  "source": "in-repo",
+  "repo": null,
+  "runtime": { "type": "dotnet", "min": "8.0", "self_contained": true },
+  "entry": "bin/Hello.exe",
+  "args": [],
+  "console": true,
+  "run_mode": "oneshot",
+  "instance": { "single": false, "mutex": null, "show_event": null, "stop_event": null },
+  "actions": [
+    { "id": "greet-nate", "label": "Greet Nate", "args": ["Nate"] }
+  ],
+  "autostart": { "default": false, "managed_by": "shell" },
+  "icon": null,
+  "data_dir": "%APPDATA%\\DeskKit\\template",
+  "settings_path": "{data_dir}\\settings.json",
+  "settings_action": null,
+  "launcher": null,
+  "helpers": [],
+  "licence": "MIT",
+  "homepage": null,
+  "notes": "Template (C# on .NET 8 is the default for new modules). Copy this folder to modules/<id>/ and follow docs/module-contract.md section 14. For a tray or window module: set OutputType WinExe and UseWindowsForms true; set single true and the three instance names; call SingleInstance.TryStart in Main."
+}

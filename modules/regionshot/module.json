@@ -1,0 +1,51 @@
+{
+  "$schema": "../../schemas/module.schema.json",
+  "schema_version": 1,
+  "id": "regionshot",
+  "name": "RegionShot",
+  "version": "0.1.1",
+  "description": "Pin a screen region, then screenshot or record it again and again.",
+  "source": "in-repo",
+  "repo": null,
+  "runtime": { "type": "python", "min": "3.11", "requirements": "src/requirements.txt" },
+  "entry": "src/region_shot.py",
+  "args": [],
+  "console": false,
+  "run_mode": "window",
+  "instance": {
+    "single": true,
+    "mutex": "Local\\DeskKit.regionshot",
+    "show_event": "Local\\DeskKit.regionshot.show",
+    "stop_event": "Local\\DeskKit.regionshot.stop"
+  },
+  "actions": [],
+  "autostart": { "default": false, "managed_by": "shell" },
+  "icon": "icon.ico",
+  "data_dir": "%APPDATA%\\DeskKit\\regionshot",
+  "settings_path": "{data_dir}\\settings.json",
+  "settings_action": null,
+  "launcher": "launch.cmd",
+  "helpers": [
+    {
+      "id": "ffmpeg",
+      "name": "FFmpeg",
+      "required": false,
+      "purpose": "Screen recording (ffmpeg.exe and ffprobe.exe)",
+      "detect": {
+        "setting": "ffmpeg_path",
+        "paths": ["{helpers_dir}\\ffmpeg\\*\\bin\\ffmpeg.exe"],
+        "on_path": "ffmpeg.exe"
+      },
+      "download": {
+        "url": "https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-essentials_build.zip",
+        "sha256": "60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba",
+        "archive": "zip",
+        "page": "https://www.gyan.dev/ffmpeg/builds/"
+      },
+      "licence": "GPL-3.0-or-later"
+    }
+  ],
+  "licence": "MIT",
+  "homepage": null,
+  "notes": "Settings keys: x, y, w, h, dir, prefix, delay, clip, rec_format, fps, gif_width, cursor, trim, unlocked, api_port, ffmpeg_path. Old registry settings are copied once into settings.json (copy only). Hidden HTTP API on 127.0.0.1, port api_port."
+}

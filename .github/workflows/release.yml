@@ -1,0 +1,47 @@
+# Builds the suite installer when a `vX.Y.Z` tag is pushed, and creates the GitHub release.
+# Contract: docs/module-contract.md section 10.4. Not run yet: DeskKit has no remote.
+name: release
+
+on:
+  push:
+    tags: ['v[0-9]*']
+
+permissions:
+  contents: write
+
+jobs:
+  suite:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+      - name: Tag must equal the suite version
+        shell: pwsh
+        run: |
+          $v = (Get-Content suite.json -Raw | ConvertFrom-Json).version
+          if ("v$v" -ne $env:GITHUB_REF_NAME) { throw "Tag $env:GITHUB_REF_NAME does not match suite.json version $v" }
+      - name: Tests
+        run: python -m unittest discover -s tests
+      - name: Build the suite (validates with --release, downloads pins, compiles)
+        shell: pwsh
+        run: ./packaging/build-suite.ps1 -Release
+      - name: Silent install test
+        shell: pwsh
+        run: ./packaging/test.ps1 -SkipBuild
+      - name: Create the release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $v = (Get-Content suite.json -Raw | ConvertFrom-Json).version
+          $flags = @()
+          if ($v -match '-') { $flags += '--prerelease' }
+          gh release create $env:GITHUB_REF_NAME "dist/DeskKit-Setup-$v.exe" dist/SHA256SUMS.txt --title "DeskKit $v" --generate-notes @flags

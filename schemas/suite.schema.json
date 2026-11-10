@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://deskkit.local/schemas/suite.schema.json",
+  "title": "DeskKit suite.json",
+  "description": "The DeskKit suite: version, shell and every module with its pin. Meaning of every key: docs/module-contract.md, section 11.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "name", "version", "publisher", "licence", "shell", "modules"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 1 },
+    "name": { "const": "DeskKit" },
+    "version": { "$ref": "#/$defs/semver" },
+    "publisher": { "type": "string", "minLength": 1 },
+    "licence": { "type": "string", "minLength": 1 },
+    "repo": { "type": "string", "pattern": "^https://github\\.com/[^/]+/[^/]+$", "description": "Suite repo: update source of the shell and every in-repo module (contract 16.1)." },
+    "shell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "path"],
+      "properties": {
+        "version": { "$ref": "#/$defs/semver" },
+        "path": { "const": "shell" }
+      }
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/module" }
+    }
+  },
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "module": {
+      "type": "object",
+      "required": ["id", "version", "source", "path"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,31}$" },
+        "version": { "$ref": "#/$defs/semver" },
+        "source": { "enum": ["in-repo", "pinned"] },
+        "path": { "type": "string", "pattern": "^modules/[a-z][a-z0-9-]{1,31}$" },
+        "repo": { "type": "string", "pattern": "^https://" },
+        "tag": { "type": ["string", "null"], "minLength": 1 },
+        "url": { "type": ["string", "null"], "pattern": "^https://" },
+        "sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "asset_type": { "enum": ["exe", "zip"] },
+        "asset_pattern": { "type": "string", "pattern": "^[A-Za-z0-9._-]*\\{version\\}[A-Za-z0-9._-]*$", "description": "Pinned only: release asset file name with {version} (contract 16.1)." },
+        "note": { "type": "string" },
+        "status": { "const": "planned", "description": "In-repo only: the module is scaffolded, not shipped. The installer, the shell list and the update check skip it (contract 11)." }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "source": { "const": "pinned" } } },
+          "then": {
+            "required": ["repo", "tag", "url", "sha256", "asset_type"],
+            "additionalProperties": false,
+            "properties": {
+              "id": true, "version": true, "source": true, "path": true, "repo": true,
+              "tag": true, "url": true, "sha256": true, "asset_type": true, "asset_pattern": true, "note": true
+            }
+          },
+          "else": {
+            "additionalProperties": false,
+            "properties": { "id": true, "version": true, "source": true, "path": true, "note": true, "status": true }
+          }
+        },
+        {
+          "if": { "properties": { "url": { "type": "null" } }, "required": ["url"] },
+          "then": { "properties": { "sha256": { "type": "null" }, "tag": { "type": "null" } } },
+          "else": { "properties": { "sha256": { "type": "string" } } }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "../../schemas/module.schema.json",
+  "schema_version": 1,
+  "id": "colorpicker",
+  "name": "Color Picker",
+  "version": "0.0.1",
+  "description": "Pick any colour on screen with a hotkey and copy it as HEX, RGB or HSL.",
+  "source": "in-repo",
+  "repo": null,
+  "runtime": {
+    "type": "dotnet",
+    "min": "8.0",
+    "self_contained": true
+  },
+  "entry": "bin/ColorPicker.exe",
+  "args": [],
+  "console": false,
+  "run_mode": "tray",
+  "instance": {
+    "single": true,
+    "mutex": "Local\\DeskKit.colorpicker",
+    "show_event": "Local\\DeskKit.colorpicker.show",
+    "stop_event": "Local\\DeskKit.colorpicker.stop"
+  },
+  "actions": [],
+  "autostart": {
+    "default": false,
+    "managed_by": "shell"
+  },
+  "icon": null,
+  "data_dir": "%APPDATA%\\DeskKit\\colorpicker",
+  "settings_path": null,
+  "settings_action": null,
+  "launcher": null,
+  "helpers": [],
+  "licence": "MIT",
+  "homepage": null,
+  "notes": "Scaffold only (G9, 2026-11-10): builds, starts, stops. No features. Listed in suite.json as status planned, so the installer and shell skip it. See docs/modules-plan.md."
+}

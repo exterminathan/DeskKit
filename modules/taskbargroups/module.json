@@ -1,0 +1,29 @@
+{
+  "$schema": "../../schemas/module.schema.json",
+  "schema_version": 1,
+  "id": "taskbargroups",
+  "name": "Taskbar Groups",
+  "version": "0.1.1",
+  "description": "Group shortcuts under one pinned taskbar icon that opens a small popup launcher.",
+  "source": "in-repo",
+  "repo": null,
+  "runtime": { "type": "dotnet", "min": "8.0", "self_contained": true },
+  "entry": "bin/TaskbarGroups.exe",
+  "args": [],
+  "console": false,
+  "run_mode": "popup",
+  "instance": { "single": false, "mutex": null, "show_event": null, "stop_event": null },
+  "actions": [
+    { "id": "configure", "label": "Edit groups", "args": [] }
+  ],
+  "autostart": { "default": false, "managed_by": "shell" },
+  "icon": null,
+  "data_dir": "%APPDATA%\\DeskKit\\taskbargroups",
+  "settings_path": "{data_dir}\\settings.json",
+  "settings_action": "configure",
+  "launcher": null,
+  "helpers": [],
+  "licence": "MIT",
+  "homepage": null,
+  "notes": "Moved in-repo on 2026-11-10 from LightweightTaskbarGroups. No args opens the config window; one arg (a group name) opens the popup for that group. Data: config\\<group>\\group.json, icons\\, settings.json, Shortcuts\\ in the data dir. First run copies (never moves) config\\, icons\\ and settings.json from the exe folder or from <system drive>\\TaskbarGroups (override: TASKBARGROUPS_LEGACY_DIR). On that copy, a group iconPath that points inside the old folder is copied into {data_dir}\\icons and rewritten to icons/<name>; the old folder is never changed. Other absolute paths in group.json (shortcut targets) are kept as they are; a missing absolute icon falls back to the same file name in {data_dir}\\icons. The live copy C:\\TaskbarGroups and its pinned shortcuts are not migrated by this module: tools/migrate-launchers.ps1 repoints the pinned taskbar and Start Menu entries (only with -IncludeTaskbarPins) and leaves C:\\TaskbarGroups\\Shortcuts\\<group>.lnk alone."
+}

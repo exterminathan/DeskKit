@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- DeskKit tray shell. Behaviour: docs/module-contract.md sections 5 to 9 and 13.
+       Version equals suite.json shell.version (contract 10.4). No NuGet packages. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>DeskKit</AssemblyName>
+    <RootNamespace>DeskKit.Shell</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>false</IncludeNativeLibrariesForSelfExtract>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <Version>0.1.0</Version>
+    <Company>inNATE Tools</Company>
+    <Product>DeskKit</Product>
+    <Description>DeskKit tray shell</Description>
+  </PropertyGroup>
+
+  <!-- The Windows Desktop runtime pack also brings WPF's native DLLs. WinForms does not use them, so the
+       publish output stays one file: DeskKit.exe. -->
+  <Target Name="DropWpfNativeLibraries" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+        Condition="'%(Filename)' == 'wpfgfx_cor3' or '%(Filename)' == 'PresentationNative_cor3' or '%(Filename)' == 'PenImc_cor3' or '%(Filename)' == 'D3DCompiler_47_cor3' or '%(Filename)' == 'vcruntime140_cor3'" />
+    </ItemGroup>
+  </Target>
+
+</Project>

@@ -1,0 +1,174 @@
+Real dry run of tools/migrate-launchers.ps1 on this PC, 2026-11-10 (G6 Migrate). Command:
+  powershell -NoProfile -ExecutionPolicy Bypass -File tools/migrate-launchers.ps1
+Nothing was changed: SHA256 and write times of the real shortcuts, scripts, pinned, Start Menu, TaskbarGroups and SoundVolumeView files were equal before and after.
+DeskKit is not installed yet, so the new paths show where the installer puts it.
+
+DeskKit launcher migration: DRY RUN. Nothing was changed. Run again with -Apply to change files.
+Install dir:        %LOCALAPPDATA%\Programs\DeskKit  (DeskKit.exe NOT FOUND (-Apply refuses to run))
+Shortcuts dir:      C:\Shortcuts
+Scripts dir:        C:\Scripts
+Pinned dir:         %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar
+Pinned dir:         %APPDATA%\Microsoft\Windows\Start Menu\Programs
+Old TaskbarGroups:  C:\TaskbarGroups  (read only)
+Edit pins:          no: pinned and Start Menu rows are skipped
+
+#    ACTION      MODULE         KIND      FILE
+1    CHANGE      cablelisten    lnk       C:\Shortcuts\Cable Listen.lnk
+2    CHANGE      taskbargroups  icon      C:\Shortcuts\Doggosync Companion.lnk
+3    CHANGE      eyesaver       lnk       C:\Shortcuts\Eye Saver.lnk
+4    CHANGE      regionshot     lnk       C:\Shortcuts\Region Shot.lnk
+5    SKIP        taskbargroups  lnk       %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Tools.lnk
+6    SKIP        taskbargroups  lnk       %APPDATA%\Microsoft\Windows\Start Menu\Programs\TaskbarGroups.lnk
+7    LEFT ALONE  taskbargroups  lnk       C:\TaskbarGroups\Shortcuts\Tools.lnk
+8    CHANGE      regionshot     bat       C:\Scripts\region_shot.bat
+9    CHANGE      cablelisten    helper    %LOCALAPPDATA%\DeskKit\helpers\soundvolumeview
+10   CHANGE      cablelisten    settings  %APPDATA%\DeskKit\cablelisten\cable_listen.json
+
+[1] CHANGE  cablelisten  C:\Shortcuts\Cable Listen.lnk
+      now  target: %LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe
+           args:   "C:\Scripts\cable_listen.pyw"
+           folder: C:\Scripts
+           icon:   C:\WINDOWS\System32\SndVol.exe,0
+      new  target: %LOCALAPPDATA%\Programs\DeskKit\DeskKit.exe
+           args:   --run cablelisten
+           folder: %LOCALAPPDATA%\Programs\DeskKit
+           icon:   C:\WINDOWS\System32\SndVol.exe,0
+      note: old icon kept (module has no icon.ico); module not installed yet
+
+[2] CHANGE  taskbargroups  C:\Shortcuts\Doggosync Companion.lnk
+      now  target: %LOCALAPPDATA%\Programs\doggosync Companion\doggosync Companion.exe
+           args:   (none)
+           folder: %LOCALAPPDATA%\Programs\doggosync Companion
+           icon:   C:\TaskbarGroups\config\Tools\icons\Doggosync Companion.ico,0
+      new  target: %LOCALAPPDATA%\Programs\doggosync Companion\doggosync Companion.exe
+           args:   (none)
+           folder: %LOCALAPPDATA%\Programs\doggosync Companion
+           icon:   %APPDATA%\DeskKit\taskbargroups\icons\Doggosync Companion.ico,0
+      icon copy: C:\TaskbarGroups\config\Tools\icons\Doggosync Companion.ico -> %APPDATA%\DeskKit\taskbargroups\icons\Doggosync Companion.ico
+      note: icon only; icon copied out of the old TaskbarGroups folder
+
+[3] CHANGE  eyesaver  C:\Shortcuts\Eye Saver.lnk
+      now  target: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+           args:   -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "%USERPROFILE%\Documents\GitHub\ClaudeGlobalSetup\tools\monitor\monitor.ps1" eyesaver toggle
+           folder: C:\Shortcuts
+           icon:   C:\Windows\System32\shell32.dll,255
+      new  target: %LOCALAPPDATA%\Programs\DeskKit\DeskKit.exe
+           args:   --run eyesaver --action toggle
+           folder: %LOCALAPPDATA%\Programs\DeskKit
+           icon:   C:\Windows\System32\shell32.dll,255
+      note: old icon kept (module has no icon.ico); module not installed yet
+
+[4] CHANGE  regionshot  C:\Shortcuts\Region Shot.lnk
+      now  target: D:\My Software\RegionShot\RegionShot.bat
+           args:   (none)
+           folder: D:\My Software\RegionShot
+           icon:   D:\Software\RegionShot\region_shot.ico,0
+      new  target: %LOCALAPPDATA%\Programs\DeskKit\DeskKit.exe
+           args:   --run regionshot
+           folder: %LOCALAPPDATA%\Programs\DeskKit
+           icon:   %LOCALAPPDATA%\Programs\DeskKit\modules\regionshot\icon.ico,0
+      note: module icon.ico; module not installed yet
+
+[5] SKIP  taskbargroups  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Tools.lnk
+      now  target: C:\TaskbarGroups\TaskbarGroups.exe
+           args:   "Tools"
+           folder: C:\TaskbarGroups\
+           icon:   C:\TaskbarGroups\config\Tools\GroupIcon.ico,0
+      new  target: %LOCALAPPDATA%\Programs\DeskKit\DeskKit.exe
+           args:   --run taskbargroups -- Tools
+           folder: %LOCALAPPDATA%\Programs\DeskKit
+           icon:   %APPDATA%\DeskKit\taskbargroups\icons\GroupIcon.ico,0
+      icon copy: C:\TaskbarGroups\config\Tools\GroupIcon.ico -> %APPDATA%\DeskKit\taskbargroups\icons\GroupIcon.ico
+      note: icon copied out of the old TaskbarGroups folder; pinned or Start Menu entry: needs -IncludeTaskbarPins
+
+[6] SKIP  taskbargroups  %APPDATA%\Microsoft\Windows\Start Menu\Programs\TaskbarGroups.lnk
+      now  target: C:\TaskbarGroups\TaskbarGroups.exe
+           args:   (none)
+           folder: C:\TaskbarGroups
+           icon:   C:\TaskbarGroups\TaskbarGroups.exe,0
+      new  target: %LOCALAPPDATA%\Programs\DeskKit\DeskKit.exe
+           args:   --run taskbargroups
+           folder: %LOCALAPPDATA%\Programs\DeskKit
+           icon:   %LOCALAPPDATA%\Programs\DeskKit\modules\taskbargroups\bin\TaskbarGroups.exe,0
+      note: icon of the installed TaskbarGroups.exe; pinned or Start Menu entry: needs -IncludeTaskbarPins
+
+[7] LEFT ALONE  taskbargroups  C:\TaskbarGroups\Shortcuts\Tools.lnk
+      now  target: C:\TaskbarGroups\TaskbarGroups.exe
+           args:   "Tools"
+           folder: C:\TaskbarGroups\
+           icon:   C:\TaskbarGroups\config\Tools\GroupIcon.ico,0
+      note: inside the old TaskbarGroups folder: never changed
+
+[8] CHANGE  regionshot  C:\Scripts\region_shot.bat
+      now: forwards to D:\Software\RegionShot\RegionShot.bat %*
+      new: "%LOCALAPPDATA%\Programs\DeskKit\DeskKit.exe" --run regionshot -- %*  (2 lines, CRLF)
+      note: old target does not exist today; module not installed yet
+
+[9] CHANGE  cablelisten  helper
+      copy from: C:\Tools\SoundVolumeView
+      copy to:   %LOCALAPPDATA%\DeskKit\helpers\soundvolumeview
+      note:      copy all 3 files unchanged (NirSoft freeware terms)
+
+[10] CHANGE  cablelisten  settings
+      copy from: C:\Scripts\cable_listen.json
+      copy to:   %APPDATA%\DeskKit\cablelisten\cable_listen.json
+      note:      module turns it into settings.json on first run
+
+Not matched (left alone): 55
+  C:\Shortcuts\Find.lnk
+  C:\Shortcuts\Notion Autofix.lnk
+  C:\Shortcuts\Sammie-Roto-2.lnk
+  C:\Shortcuts\SCDL.lnk
+  C:\Shortcuts\Sound Options.lnk
+  C:\Shortcuts\VA.lnk
+  C:\Shortcuts\WA.lnk
+  C:\Shortcuts\Win4KSS Start.lnk
+  C:\Shortcuts\Win4KSS.lnk
+  C:\Shortcuts\WMC-D.lnk
+  C:\Shortcuts\WVC.lnk
+  C:\Shortcuts\WVC-B.lnk
+  C:\Shortcuts\YTDL.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Ableton Live 12 Suite.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Blender 5.0.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Blender 5.2.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Discord (2).lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Everything.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\File Explorer.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\GitHubDesktop.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Google Chrome.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Inkscape.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Notion.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\rekordbox 6.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Spotify (2).lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Unity Hub.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\UnrealEditor.lnk
+  %APPDATA%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Visual Studio Code.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\570 Exam 2.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Administrative Tools.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\CurseForge.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Discord.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Doggosync Companion.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\EfficientAssetRipper.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\File Explorer.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Find.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Lowkey.gg.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Lunar Client.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Medal.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Notion.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Outlook.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\PowerPoint.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Sammie-Roto-2.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Sonic Suite Companion.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Spotify.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Start Screen Saver.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\UE5 UMG Docs.lnk
+  %APPDATA%\Microsoft\Windows\Start Menu\Programs\Ultimate Vocal Remover.lnk
+  C:\Scripts\Fix-StuckMediaKey.cmd
+  C:\Scripts\scdl.bat
+  C:\Scripts\toggle_bridge.bat
+  C:\Scripts\toggle_notion_autofix.bat
+  C:\Scripts\toggle_overlay.bat
+  C:\Scripts\toggle_wmc.bat
+  C:\Scripts\ytdl.bat
+
+Summary: 7 to change, 0 already done, 2 skipped, 1 left alone, 55 not matched.

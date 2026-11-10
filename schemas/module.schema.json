@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://deskkit.local/schemas/module.schema.json",
+  "title": "DeskKit module.json",
+  "description": "One DeskKit module. Meaning of every key: docs/module-contract.md, section 3.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "id", "name", "version", "description", "source", "repo",
+    "runtime", "entry", "args", "console", "run_mode", "instance", "actions",
+    "autostart", "icon", "data_dir", "settings_path", "settings_action",
+    "launcher", "helpers", "licence", "homepage"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 1 },
+    "id": { "$ref": "#/$defs/id" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 40 },
+    "version": { "$ref": "#/$defs/semver" },
+    "description": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "source": { "enum": ["in-repo", "pinned"] },
+    "repo": { "type": ["string", "null"], "pattern": "^https://" },
+    "runtime": { "$ref": "#/$defs/runtime" },
+    "entry": { "$ref": "#/$defs/relpath" },
+    "args": { "$ref": "#/$defs/args" },
+    "console": { "type": "boolean" },
+    "run_mode": { "enum": ["tray", "window", "popup", "oneshot"] },
+    "instance": { "$ref": "#/$defs/instance" },
+    "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
+    "autostart": { "$ref": "#/$defs/autostart" },
+    "icon": {
+      "anyOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/relpath", "pattern": "\\.ico$" }
+      ]
+    },
+    "data_dir": { "type": "string", "minLength": 1 },
+    "settings_path": { "type": ["string", "null"], "minLength": 1 },
+    "settings_action": { "type": ["string", "null"], "pattern": "^[a-z][a-z0-9-]{0,31}$" },
+    "launcher": {
+      "anyOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/relpath", "pattern": "\\.cmd$" }
+      ]
+    },
+    "helpers": { "type": "array", "items": { "$ref": "#/$defs/helper" } },
+    "licence": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "homepage": { "type": ["string", "null"], "pattern": "^https://" },
+    "notes": { "type": ["string", "null"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "source": { "const": "pinned" } } },
+      "then": { "properties": { "repo": { "type": "string" } } },
+      "else": { "properties": { "repo": { "type": "null" } } }
+    },
+    {
+      "if": { "properties": { "run_mode": { "enum": ["tray", "window"] } } },
+      "then": { "properties": { "instance": { "properties": { "single": { "const": true } } } } },
+      "else": {
+        "properties": {
+          "instance": {
+            "properties": {
+              "single": { "const": false },
+              "mutex": { "type": "null" },
+              "show_event": { "type": "null" },
+              "stop_event": { "type": "null" }
+            }
+          },
+          "autostart": { "properties": { "default": { "const": false } } }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,31}$" },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "relpath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![\\\\/])(?![A-Za-z]:)(?!.*(^|[\\\\/])\\.\\.([\\\\/]|$)).+$"
+    },
+    "args": { "type": "array", "items": { "type": "string" } },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "min"],
+      "properties": {
+        "type": { "enum": ["dotnet", "python", "powershell", "native"] },
+        "min": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+){0,2}$" },
+        "self_contained": { "type": "boolean" },
+        "requirements": {
+          "anyOf": [ { "type": "null" }, { "$ref": "#/$defs/relpath" } ]
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "dotnet" } } },
+          "then": { "required": ["self_contained"] },
+          "else": { "not": { "required": ["self_contained"] } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "python" } } },
+          "then": { "required": ["requirements"] },
+          "else": { "not": { "required": ["requirements"] } }
+        }
+      ]
+    },
+    "instance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["single", "mutex", "show_event", "stop_event"],
+      "properties": {
+        "single": { "type": "boolean" },
+        "mutex": { "type": ["string", "null"], "pattern": "^(Local|Global)\\\\.+$" },
+        "show_event": { "type": ["string", "null"], "pattern": "^(Local|Global)\\\\.+$" },
+        "stop_event": { "type": ["string", "null"], "pattern": "^(Local|Global)\\\\.+$" }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "args"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,31}$" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "args": { "$ref": "#/$defs/args" }
+      }
+    },
+    "autostart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default", "managed_by"],
+      "properties": {
+        "default": { "type": "boolean" },
+        "managed_by": { "enum": ["shell", "module"] }
+      }
+    },
+    "helper": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "required", "purpose", "detect", "download", "licence"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "required": { "type": "boolean" },
+        "purpose": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "detect": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["setting", "paths", "on_path"],
+          "properties": {
+            "setting": { "type": ["string", "null"], "pattern": "^[a-z][a-z0-9_]*$" },
+            "paths": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "on_path": { "type": ["string", "null"], "pattern": "^[^\\\\/:]+$" }
+          }
+        },
+        "download": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["url", "sha256", "archive", "page"],
+          "properties": {
+            "url": { "type": "string", "pattern": "^https://" },
+            "sha256": { "$ref": "#/$defs/sha256" },
+            "archive": { "enum": ["zip", "none"] },
+            "page": { "type": "string", "pattern": "^https://" }
+          }
+        },
+        "licence": { "type": "string", "minLength": 1, "maxLength": 64 }
+      }
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

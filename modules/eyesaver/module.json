@@ -1,0 +1,32 @@
+{
+  "$schema": "../../schemas/module.schema.json",
+  "schema_version": 1,
+  "id": "eyesaver",
+  "name": "Eye Saver",
+  "version": "0.1.0",
+  "description": "Switch the monitor between an eye-saver picture profile and a normal one over DDC/CI.",
+  "source": "in-repo",
+  "repo": null,
+  "runtime": { "type": "powershell", "min": "5.1" },
+  "entry": "src/monitor.ps1",
+  "args": ["eyesaver", "toggle"],
+  "console": false,
+  "run_mode": "oneshot",
+  "instance": { "single": false, "mutex": null, "show_event": null, "stop_event": null },
+  "actions": [
+    { "id": "toggle", "label": "Toggle Eye Saver", "args": ["eyesaver", "toggle"] },
+    { "id": "on", "label": "Eye Saver on", "args": ["eyesaver", "on"] },
+    { "id": "off", "label": "Eye Saver off", "args": ["eyesaver", "off"] },
+    { "id": "status", "label": "Show monitor values", "args": ["status"] }
+  ],
+  "autostart": { "default": false, "managed_by": "shell" },
+  "icon": null,
+  "data_dir": "%APPDATA%\\DeskKit\\eyesaver",
+  "settings_path": "{data_dir}\\settings.json",
+  "settings_action": null,
+  "launcher": "launch.cmd",
+  "helpers": [],
+  "licence": "MIT",
+  "homepage": null,
+  "notes": "Profiles, monitor_match and the toggle detect rule live in settings.json (defaults written on first run). Monitor is found by monitor_match against the Windows description (usually only Generic PnP Monitor, so it falls back to the primary monitor). If you rename monitor.ps1, change entry and launch.cmd together."
+}
