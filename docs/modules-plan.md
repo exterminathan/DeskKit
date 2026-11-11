@@ -32,7 +32,7 @@ Status words, one meaning each:
 
 - **Renamed or combined.** Nate allows both. Two candidates to combine: the image, video and audio converters into one `convert` module with one window and one engine each; Color Picker and Always On Top as one "Desk tools" tray module. Keep them separate until they have features: the scaffolds are small and a merge is cheap.
 - **Power Display and Eye Saver.** Eye Saver stays until Power Display matches it. Plan: `modules/powerdisplay/README.md`, section "Replaces Eye Saver".
-- **Always On Top replaces desk pins.** Confirm with Nate which tool "desk pins" is. No source was found in this repo.
+- **Always On Top replaces DeskPins** (`C:\Program Files (x86)\DeskPins\deskpins.exe`, confirmed by Nate 2026-11-10). DeskPins pins one or more windows on top. Nate wants custom controls: pin on all virtual desktops or only the current one, plus whatever else is useful. Details: `modules/alwaysontop/README.md`.
 - **Power Rename replaces ReNamer.** ReNamer is a third-party tool. Nate keeps it until Power Rename covers his rules (counters, regular expressions, presets).
 
 ## Recommended build order

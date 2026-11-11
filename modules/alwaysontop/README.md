@@ -11,7 +11,9 @@ Build: `powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1` (builds `
 
 ## Planned features
 
-- **Run mode: `tray`.** Like PowerToys Always On Top, it waits in the tray and a global hotkey pins or unpins the focused window. It replaces the old desk pins.
+- **Run mode: `tray`.** Like PowerToys Always On Top, it waits in the tray and a global hotkey pins or unpins the focused window. It replaces DeskPins (confirmed by Nate, 2026-11-10): pin one or more windows at once.
+- **Desktop scope per pin (Nate's request):** each pin is either "all virtual desktops" or "current desktop only". A setting sets the default and the tray menu changes it per window. Needs the virtual desktop API (undocumented COM, or `IVirtualDesktopManager` for the current-desktop check).
+- Other controls to plan: opacity per pinned window, click-through toggle, pin by process name (auto-pin rules), pin list that survives restart, hotkey to unpin all.
 - Global hotkey, default `Win+Ctrl+T` (the PowerToys default).
 - Pin with `SetWindowPos(HWND_TOPMOST)`; unpin with `HWND_NOTOPMOST`.
 - Coloured border around a pinned window (default on) and a sound on pin (default off).

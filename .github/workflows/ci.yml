@@ -1,5 +1,5 @@
 # CI for DeskKit: validate the contract files, run the tests, and test the installer.
-# Not run yet: DeskKit has no remote (Nate decides when to publish).
+# Runs on every push to main and on pull requests.
 name: ci
 
 on:
